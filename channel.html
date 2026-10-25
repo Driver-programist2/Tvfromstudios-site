@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Информация о канале - TVFromStudios</title>
+    <!-- Подключение иконок FontAwesome для красоты -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* =========================================
+           1. БАЗОВЫЕ СТИЛИ И ПЕРЕМЕННЫЕ (Фичи 1-5)
+           ========================================= */
+        :root {
+            --bg-main: #1a0f2e;
+            --bg-card: #25173d;
+            --bg-secondary: #1f1235;
+            --text-main: #f0eaff;
+            --text-muted: #b8a0d8;
+            --accent: #a87cff;
+            --accent-hover: #9a7ac0;
+            --success: #4ade80;
+            --danger: #ef4444;
+            --border: #4a2d7a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s; /* Фича 4: Плавная смена темы */
+        }
+
+        /* Фича 6: Светлая тема */
+        body.light-theme {
+            --bg-main: #f0f2f5;
+            --bg-card: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --text-main: #1a1a2e;
+            --text-muted: #6c757d;
+            --border: #dee2e6;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: var(--bg-card);
+            border-radius: 28px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--border);
+            text-align: center;
+            margin-top: 50px;
+            position: relative;
+            animation: fadeInUp 0.6s ease-out; /* Фича 2: Анимация появления */
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* =========================================
+           2. ШАПКА И ЛОГОТИП (Фичи 7-11)
+           ========================================= */
+        .top-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-btn:hover {
+            background: var(--accent);
+            color: #fff;
+            transform: scale(1.1); /* Фича 8: Эффект увеличения при наведении */
+        }
+
+        /* Фича 7: Индикатор "В эфире" */
+        .live-indicator {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid var(--danger);
+        }
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        h1 { color: var(--accent); font-size: 2.2rem; margin-bottom: 15px; font-weight: 800; }
+
+        .channel-logo-placeholder {
+            width: 140px;
+            height: 140px;
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            margin: 10px auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            border: 3px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Фича 9: Эффект блика на логотипе */
+        .channel-logo-placeholder::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
+            transform: skewX(-25deg);
+            animation: shine 3s infinite;
+        }
+        @keyframes shine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
+
+        /* =========================================
+           3. ИНФОРМАЦИЯ И СТАТИСТИКА (Фичи 12-18)
+           ========================================= */
+        .info-block {
+            background: var(--bg-secondary);
+            padding: 25px;
+            border-radius: 16px;
+            margin-top: 20px;
+            text-align: left;
+            border: 1px solid var(--border);
+            line-height: 1.6;
+        }
+
+        .info-block p { margin-bottom: 12px; color: var(--text-muted); font-size: 0.95rem; }
+        .info-block strong { color: var(--text-main); }
+
+        /* Фича 12: Теги категорий */
+        .category-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        .tag {
+            background: rgba(168, 124, 255, 0.15);
+            color: var(--accent);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid rgba(168, 124, 255, 0.3);
+        }
+
+        /* Фича 13-15: Блок статистики (Зрители, Рейтинг) */
+        .stats-row {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            padding: 15px;
+            background: var(--bg-main);
+            border-radius: 12px;
+        }
+        .stat-item { text-align: center; }
+        .stat-value { font-size: 1.5rem; font-weight: bold; color: var(--text-main); }
+        .stat-label { font-size: 0.8rem; color: var(--text-muted); }
+
+        /* Фича 16: Прогресс-бар качества */
+        .quality-bar-container {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-main);
+            border-radius: 4px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        .quality-bar {
+            height: 100%;
+            width: 85%;
+            background: linear-gradient(90deg, var(--success), #22c55e);
+            border-radius: 4px;
+            transition: width 1s ease-in-out;
+        }
+
+        /* =========================================
+           4. КНОПКИ ДЕЙСТВИЙ И ПЛЕЕР (Фичи 19-25)
+           ========================================= */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 28px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { background: var(--accent-hover); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(168, 124, 255, 0.3); }
+        
+        .btn-secondary { background: transparent; color: var(--text-main); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: var(--bg-secondary); border-color: var(--accent); }
+
+        /* Фича 21: Кнопка "Смотреть" */
+        .btn-watch {
+            background: var(--success);
+            color: #000;
+            font-size: 1.1rem;
+            padding: 15px 40px;
+            box-shadow: 0 0 20px rgba(74, 222, 128, 0.4);
+        }
+        .btn-watch:hover { background: #22c55e; transform: scale(1.05); }
+
+        /* =========================================
+           5. ВСПОМОГАТЕЛЬНЫЕ СЕКЦИИ (Фичи 26-35)
+           ========================================= */
+        .section-title {
+            text-align: left;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            color: var(--text-main);
+            font-size: 1.3rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Фича 26: Похожие каналы */
+        .related-channels {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+        }
+        .related-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 15px 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        .related-card:hover { border-color: var(--accent); background: rgba(168, 124, 255, 0.1); }
+
+        /* Фича 27: Блок отзывов (Заглушка) */
+        .review-box {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: left;
+            border: 1px solid var(--border);
+        }
+        .review-input {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            resize: vertical;
+            min-height: 80px;
+        }
+        .review-input:focus { outline: none; border-color: var(--accent); }
+
+        /* =========================================
+           6. УВЕДОМЛЕНИЯ И ТУЛТИПЫ (Фичи 36-42)
+           ========================================= */
+        /* Фича 37: Тосты (уведомления) */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 9999;
+        }
+        .toast {
+            background: var(--bg-card);
+            color: var(--text-main);
+            padding: 15px 25px;
+            border-radius: 10px;
+            border-left: 5px solid var(--accent);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: slideInRight 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Фича 41: Кастомный тултип */
+        [data-tooltip] { position: relative; cursor: pointer; }
+        [data-tooltip]::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-main);
+            color: var(--text-main);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            border: 1px solid var(--border);
+            z-index: 10;
+        }
+        [data-tooltip]:hover::before { opacity: 1; visibility: visible; bottom: 130%; }
+
+        /* =========================================
+           7. ФУТЕР И АДАПТИВНОСТЬ (Фичи 43-50)
+           ========================================= */
+        .footer-actions {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Фича 45: Адаптивность для мобильных */
+        @media (max-width: 600px) {
+            .container { padding: 30px 20px; margin-top: 20px; }
+            h1 { font-size: 1.6rem; }
+            .action-buttons { flex-direction: column; }
+            .btn { width: 100%; justify-content: center; }
+            .stats-row { flex-direction: column; gap: 15px; }
+        }
+
+        /* Фича 46: Скрытие элементов при печати */
+        @media print {
+            .top-controls, .action-buttons, .review-box, .toast-container { display: none; }
+            body { background: #fff; color: #000; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Фича 37: Контейнер для уведомлений -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <div class="container">
+        <!-- Фича 7: Индикатор Live -->
+        <div class="live-indicator">
+            <div class="live-dot"></div> В ЭФИРЕ
+        </div>
+
+        <!-- Фичи 5, 6, 10: Панель управления (Тема, Поделиться) -->
+        <div class="top-controls">
+            <button class="icon-btn" data-tooltip="Поделиться" onclick="shareChannel()"><i class="fas fa-share-alt"></i></button>
+            <button class="icon-btn" data-tooltip="Сменить тему" onclick="toggleTheme()"><i class="fas fa-moon" id="themeIcon"></i></button>
+            <button class="icon-btn" data-tooltip="В избранное" onclick="addToFavorites()"><i class="fas fa-heart" id="favIcon"></i></button>
+        </div>
+
+        <!-- Фича 9: Логотип -->
+        <div class="channel-logo-placeholder">
+            <i class="fas fa-tv"></i>
+        </div>
+
+        <!-- Фича 11: Заголовок -->
+        <h1 id="channelName">Загрузка...</h1>
+
+        <!-- Фича 12: Теги -->
+        <div class="category-tags" style="justify-content: center;">
+            <span class="tag">HD 1080p</span>
+            <span class="tag">Без рекламы</span>
+            <span class="tag">24/7</span>
+            <span class="tag" id="channelCategory">Развлечения</span>
+        </div>
+
+        <!-- Фичи 13-15: Статистика -->
+        <div class="stats-row">
+            <div class="stat-item">
+                <div class="stat-value" id="viewersCount">1,245</div>
+                <div class="stat-label">Сейчас смотрят</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">4.8 <i class="fas fa-star" style="color: gold; font-size: 1rem;"></i></div>
+                <div class="stat-label">Рейтинг канала</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">99.9%</div>
+                <div class="stat-label">Аптайм</div>
+            </div>
+        </div>
+
+        <!-- Основная информация -->
+        <div class="info-block">
+            <p><strong>Статус:</strong> <span style="color: var(--success);">Вещает (Live)</span></p>
+            <p><strong>Качество:</strong> HD / Full HD 
+                <!-- Фича 16: Прогресс-бар качества -->
+                <div class="quality-bar-container"><div class="quality-bar"></div></div>
+            </p>
+            <p><strong>Язык:</strong> Русский</p>
+            <p><strong>Описание:</strong> Этот телеканал транслируется в прямом эфире без перерывов и рекламы. Наслаждайтесь просмотром любимых передач, фильмов и спортивных событий в высоком качестве через наш IPTV-сервис.</p>
+        </div>
+
+        <!-- Кнопки действий -->
+        <div class="action-buttons">
+            <!-- Фича 21: Кнопка смотреть -->
+            <button class="btn btn-watch" onclick="showToast('Запуск плеера... (Заглушка)', 'success')">
+                <i class="fas fa-play"></i> Смотреть в прямом эфире
+            </button>
+            
+            <!-- Фича 19: Копировать ссылку -->
+            <button class="btn btn-secondary" onclick="copyStreamLink()">
+                <i class="fas fa-link"></i> Копировать ссылку на поток
+            </button>
+        </div>
+
+        <!-- Фича 26: Похожие каналы -->
+        <h2 class="section-title"><i class="fas fa-th-large"></i> Похожие каналы</h2>
+        <div class="related-channels">
+            <div class="related-card" onclick="switchChannel('СТС')">СТС</div>
+            <div class="related-card" onclick="switchChannel('ТНТ')">ТНТ</div>
+            <div class="related-card" onclick="switchChannel('Первый канал')">Первый канал</div>
+            <div class="related-card" onclick="switchChannel('Россия 1')">Россия 1</div>
+            <div class="related-card" onclick="switchChannel('НТВ')">НТВ</div>
+        </div>
+
+        <!-- Фича 27: Оставить отзыв -->
+        <h2 class="section-title"><i class="fas fa-comment-dots"></i> Оставить отзыв</h2>
+        <div class="review-box">
+            <textarea class="review-input" id="reviewText" placeholder="Поделитесь впечатлениями о канале..."></textarea>
+            <button class="btn btn-primary" onclick="submitReview()" style="padding: 8px 20px; font-size: 0.9rem;">Отправить</button>
+        </div>
+
+        <!-- Футер -->
+        <div class="footer-actions">
+            <a href="index.html" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> На главную
+            </a>
+            <!-- Фича 49: Кнопка в Telegram -->
+            <a href="https://t.me/tvfromspb_bot" target="_blank" class="btn btn-secondary">
+                <i class="fab fa-telegram-plane"></i> Бот поддержки
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // =========================================
+        // БЛОК 1: ИНИЦИАЛИЗАЦИЯ И ДАННЫЕ (Фичи 1-4)
+        // =========================================
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const channelName = urlParams.get('name');
+            
+            if (channelName) {
+                document.getElementById('channelName').textContent = channelName;
+                document.title = channelName + ' - Смотреть онлайн';
+                // Фича 15: Симуляция загрузки данных
+                simulateDataLoading();
+            } else {
+                document.getElementById('channelName').textContent = 'Канал не выбран';
+            }
+
+            // Фича 42: Проверка сохраненной темы
+            if (localStorage.getItem('theme') === 'light') {
+                document.body.classList.add('light-theme');
+                document.getElementById('themeIcon').className = 'fas fa-sun';
+            }
+        });
+
+        // =========================================
+        // БЛОК 2: ИНТЕРАКТИВ И УТИЛИТЫ (Фичи 5-12)
+        // =========================================
+        
+        // Фича 6: Переключение темы
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            const isLight = document.body.classList.contains('light-theme');
+            document.getElementById('themeIcon').className = isLight ? 'fas fa-sun' : 'fas fa-moon';
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            showToast('Тема изменена!', 'info');
+        }
+
+        // Фича 37: Показ уведомлений (Тосты)
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            
+            // Иконки для разных типов
+            const icons = { success: 'fa-check-circle', info: 'fa-info-circle', error: 'fa-exclamation-triangle' };
+            const colors = { success: 'var(--success)', info: 'var(--accent)', error: 'var(--danger)' };
+            
+            toast.style.borderLeftColor = colors[type] || colors.info;
+            toast.innerHTML = `<i class="fas ${icons[type] || icons.info}" style="color: ${colors[type]}"></i> <span>${message}</span>`;
+            
+            container.appendChild(toast);
+            
+            // Удаление через 3 секунды
+            setTimeout(() => {
+                toast.style.animation = 'slideInRight 0.3s reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Фича 19: Копирование ссылки
+        function copyStreamLink() {
+            const fakeLink = 'https://tvfromstudios.ru/stream/' + encodeURIComponent(document.getElementById('channelName').textContent);
+            navigator.clipboard.writeText(fakeLink).then(() => {
+                showToast('Ссылка скопирована в буфер обмена!', 'success');
+            }).catch(() => {
+                showToast('Не удалось скопировать ссылку', 'error');
+            });
+        }
+
+        // Фича 38: Поделиться в соцсетях
+        function shareChannel() {
+            const channel = document.getElementById('channelName').textContent;
+            if (navigator.share) {
+                navigator.share({
+                    title: channel,
+                    text: `Смотрите ${channel} в прямом эфире!`,
+                    url: window.location.href
+                }).catch(console.error);
+            } else {
+                copyStreamLink();
+            }
+        }
+
+        // Фича 10: Добавить в избранное
+        function addToFavorites() {
+            const channel = document.getElementById('channelName').textContent;
+            let favs = JSON.parse(localStorage.getItem('favorites') || '[]');
+            
+            if (favs.includes(channel)) {
+                favs = favs.filter(f => f !== channel);
+                showToast('Удалено из избранного', 'info');
+                document.getElementById('favIcon').style.color = 'var(--text-main)';
+            } else {
+                favs.push(channel);
+                showToast('Добавлено в избранное!', 'success');
+                document.getElementById('favIcon').style.color = 'var(--danger)';
+            }
+            localStorage.setItem('favorites', JSON.stringify(favs));
+        }
+
+        // =========================================
+        // БЛОК 3: ДИНАМИЧЕСКИЕ ДАННЫЕ (Фичи 13-18)
+        // =========================================
+        
+        // Симуляция живых данных
+        function simulateDataLoading() {
+            // Фича 13: Рандомное количество зрителей
+            setInterval(() => {
+                const viewers = Math.floor(Math.random() * (2500 - 1000 + 1)) + 1000;
+                document.getElementById('viewersCount').textContent = viewers.toLocaleString('ru-RU');
+            }, 5000);
+        }
+
+        // =========================================
+        // БЛОК 4: НАВИГАЦИЯ И ВЗАИМОДЕЙСТВИЕ (Фичи 26-35)
+        // =========================================
+        
+        // Фича 26: Переключение на похожий канал
+        function switchChannel(newChannelName) {
+            window.location.href = 'channel.html?name=' + encodeURIComponent(newChannelName);
+        }
+
+        // Фича 27: Отправка отзыва
+        function submitReview() {
+            const text = document.getElementById('reviewText').value.trim();
+            if (!text) {
+                showToast('Напишите хоть что-нибудь!', 'error');
+                return;
+            }
+            showToast('Отзыв успешно отправлен!', 'success');
+            document.getElementById('reviewText').value = '';
+            // Здесь можно добавить fetch-запрос на сервер для сохранения отзыва
+        }
+
+        // Фича 50: Логирование просмотров (для аналитики)
+        function logView(channel) {
+            console.log(`[ANALYTICS] Пользователь просматривает: ${channel} в ${new Date().toLocaleTimeString()}`);
+            // Здесь можно отправить данные в Яндекс.Метрику или Google Analytics
+        }
+        logView(document.getElementById('channelName').textContent);
+    </script>
+</body>
+</html>

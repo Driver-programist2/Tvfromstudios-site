@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Как подключить ТВ — TVFromStudios</title>
+    <meta name="description" content="Пошаговая инструкция по подключению IPTV через плеер Televizo. Описание пакетов и ссылки на скачивание.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #1a0f2e;
+            --bg-card: #25173d;
+            --bg-secondary: #1f1235;
+            --text-main: #f0eaff;
+            --text-muted: #b8a0d8;
+            --accent: #a87cff;
+            --accent-hover: #9a7ac0;
+            --success: #4ade80;
+            --danger: #ef4444;
+            --warning: #fbbf24;
+            --border: #4a2d7a;
+        }
+
+        @media (prefers-color-scheme: light) {
+            body:not(.light-theme) {
+                --bg-main: #f0f2f5;
+                --bg-card: #ffffff;
+                --bg-secondary: #f8f9fa;
+                --text-main: #1a1a2e;
+                --text-muted: #6c757d;
+                --border: #dee2e6;
+            }
+        }
+        body.light-theme {
+            --bg-main: #f0f2f5;
+            --bg-card: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --text-main: #1a1a2e;
+            --text-muted: #6c757d;
+            --border: #dee2e6;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: var(--bg-card);
+            border-radius: 28px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--border);
+            margin-top: 20px;
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .top-nav a {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .top-nav a:hover { text-decoration: underline; }
+
+        .theme-toggle {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .theme-toggle:hover { background: var(--accent); color: #fff; }
+
+        h1 {
+            color: var(--accent);
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .subtitle {
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 35px;
+            font-size: 0.95rem;
+        }
+
+        h2 {
+            color: var(--text-main);
+            font-size: 1.4rem;
+            margin-top: 40px;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        h2:first-of-type { margin-top: 0; }
+
+        h3 {
+            color: var(--accent);
+            font-size: 1.1rem;
+            margin-top: 24px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        p { color: var(--text-muted); margin-bottom: 12px; font-size: 0.95rem; }
+
+        .step {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            position: relative;
+            padding-left: 70px;
+        }
+        .step-num {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            width: 36px; height: 36px;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+        .step h3 { margin-top: 0; color: var(--text-main); }
+
+        .player-card {
+            background: linear-gradient(135deg, rgba(168, 124, 255, 0.15), rgba(168, 124, 255, 0.05));
+            border: 2px solid var(--accent);
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .player-card .icon {
+            font-size: 3.5rem;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+        .player-card h3 {
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+        .player-card p { margin-bottom: 16px; }
+
+        .package-list {
+            display: grid;
+            gap: 14px;
+            margin-top: 15px;
+        }
+        .package-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            border-radius: 12px;
+            padding: 16px 20px;
+        }
+        .package-item h4 {
+            color: var(--text-main);
+            font-size: 1rem;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .package-item p {
+            margin-bottom: 0;
+            font-size: 0.88rem;
+        }
+        .package-item .badge {
+            display: inline-block;
+            background: rgba(74, 222, 128, 0.15);
+            color: var(--success);
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 8px;
+            font-weight: 700;
+            vertical-align: middle;
+        }
+        .package-item .badge.soon {
+            background: rgba(251, 191, 36, 0.15);
+            color: var(--warning);
+        }
+        .package-item .badge.adult {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+
+        .warning-box {
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid var(--warning);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 20px 0;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        .warning-box i {
+            color: var(--warning);
+            font-size: 1.2rem;
+            margin-top: 2px;
+        }
+        .warning-box p { margin-bottom: 0; color: var(--text-main); font-size: 0.9rem; }
+
+        .downloads {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+            margin-top: 20px;
+        }
+        .download-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-main);
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .download-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            background: rgba(168, 124, 255, 0.08);
+        }
+        .download-card img {
+            width: 48px; height: 48px;
+            object-fit: contain;
+        }
+        .download-card .fallback-icon {
+            width: 48px; height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--accent);
+        }
+        .download-card .name {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+        .download-card .note {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .footer-actions {
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); }
+        .btn-secondary { background: transparent; color: var(--text-main); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: var(--bg-secondary); border-color: var(--accent); }
+
+        .inline-code {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: var(--accent);
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 24px 18px; }
+            h1 { font-size: 1.6rem; }
+            .step { padding-left: 20px; padding-top: 60px; }
+            .step-num { top: 16px; }
+            .downloads { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="top-nav">
+            <a href="index.html"><i class="fas fa-arrow-left"></i> На главную</a>
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Сменить тему">
+                <i class="fas fa-moon" id="themeIcon"></i>
+            </button>
+        </div>
+
+        <h1>Как подключить ТВ</h1>
+        <p class="subtitle">Пошаговая инструкция для плеера Televizo</p>
+
+        <!-- ПЛЕЕР -->
+        <div class="player-card">
+            <div class="icon"><i class="fas fa-tv"></i></div>
+            <h3>Televizo — IPTV Player</h3>
+            <p>Единственный рекомендуемый плеер. Бесплатный, без встроенных каналов — только ваш плейлист.</p>
+        </div>
+
+        <div class="warning-box">
+            <i class="fas fa-triangle-exclamation"></i>
+            <p><strong>Важно:</strong> Televizo — это только плеер. Он не содержит каналов. Чтобы смотреть ТВ, вы добавляете плейлист, который получили от TVFromStudios.</p>
+        </div>
+
+        <!-- ШАГИ -->
+        <h2><i class="fas fa-list-ol"></i> Пошаговая настройка</h2>
+
+        <div class="step">
+            <div class="step-num">1</div>
+            <h3>Скачайте и установите Televizo</h3>
+            <p>Используйте ссылки в самом низу страницы. Выберите магазин, соответствующий вашему устройству (Android TV, приставка, телефон, iPhone).</p>
+        </div>
+
+        <div class="step">
+            <div class="step-num">2</div>
+            <h3>Запустите Televizo</h3>
+            <p>При первом запуске приложение предложит создать плейлист. Нажмите <strong>«Создать плейлист»</strong> (или «Add playlist»).</p>
+        </div>
+
+        <div class="step">
+            <div class="step-num">3</div>
+            <h3>Выберите тип плейлиста</h3>
+            <p>Televizo поддерживает два формата: <strong>M3U</strong> и <strong>Xtream Codes</strong>. Выберите <strong>M3U</strong> — TVFromStudios выдаёт ссылку именно в этом формате.</p>
+        </div>
+
+        <div class="step">
+            <div class="step-num">4</div>
+            <h3>Вставьте ссылку на плейлист</h3>
+            <p>В поле «URL плейлиста» вставьте ссылку, которую вы получили в Telegram-боте <span class="inline-code">@tvfromspb_bot</span>. Дайте плейлисту название (например, «TVFromSPB»).</p>
+            <p style="margin-top: 8px;">Настройки архива и обновления можно оставить по умолчанию.</p>
+        </div>
+
+        <div class="step">
+            <div class="step-num">5</div>
+            <h3>Сохраните и смотрите</h3>
+            <p>Нажмите «Сохранить» (галочка в углу). Плейлист загрузится, и появятся каналы. Выберите любой и нажмите для просмотра.</p>
+        </div>
+
+        <div class="step">
+            <div class="step-num">6</div>
+            <h3>Дополнительные настройки (по желанию)</h3>
+            <p>В настройках Televizo можно включить <strong>«Открывать видео в полный экран»</strong> и <strong>«Перезагружать видеопоток»</strong> — это поможет, если интернет ненадолго пропадает.</p>
+        </div>
+
+        <!-- ПАКЕТЫ -->
+        <h2><i class="fas fa-box-open"></i> Описание пакетов</h2>
+
+        <div class="package-list">
+            <div class="package-item">
+                <h4><i class="fas fa-city"></i> Основной Санкт-Петербург <span class="badge">Бесплатно</span></h4>
+                <p>450+ телеканалов и радио. Базовый пакет для зрителей Санкт-Петербурга: федеральные каналы, региональные, развлекательные, новостные и музыкальные.</p>
+            </div>
+            <div class="package-item">
+                <h4><i class="fas fa-city"></i> Основной Москва <span class="badge">Бесплатно</span></h4>
+                <p>450+ телеканалов и радио. Аналогичен пакету для Санкт-Петербурга, но с московской региональной сеткой вещания.</p>
+            </div>
+            <div class="package-item">
+                <h4><i class="fas fa-child"></i> Детский <span class="badge">Бесплатно</span></h4>
+                <p>35+ каналов. Мультфильмы, развивающие программы, детские шоу. Безопасный контент для детей всех возрастов.</p>
+            </div>
+            <div class="package-item">
+                <h4><i class="fas fa-film"></i> Настрой кино <span class="badge">Бесплатно</span></h4>
+                <p>11 каналов. Фильмы, сериалы, премьеры. Для тех, кто хочет смотреть кино без поиска по общему плейлисту.</p>
+            </div>
+            <div class="package-item">
+                <h4><i class="fas fa-clapperboard"></i> Кинозалы <span class="badge">Бесплатно</span></h4>
+                <p>10 каналов. Отдельные кинозалы в HD-качестве, включая тематические подборки (мультфильмы, фэнтези и др.).</p>
+            </div>
+            <div class="package-item">
+                <h4><i class="fas fa-fire"></i> Взрослый (18+) <span class="badge adult">18+</span></h4>
+                <p>14 каналов. Контент только для взрослых. Не рекомендуется для просмотра с детьми.</p>
+            </div>
+            <div class="package-item">
+                <h4><i class="fas fa-map-location-dot"></i> Региональные пакеты (Нижний Новгород, Екатеринбург, Саратов и др.) <span class="badge soon">Планируется</span></h4>
+                <p>Планируются к запуску. Следите за обновлениями в Telegram-канале.</p>
+            </div>
+        </div>
+
+        <!-- СКАЧАТЬ -->
+        <h2><i class="fas fa-download"></i> Скачать Televizo</h2>
+
+        <div class="downloads">
+            <a href="https://play.google.com/store/apps/details?id=com.ottplay.ottplay" target="_blank" rel="noopener noreferrer" class="download-card">
+                <img src="https://cdn-icons-png.flaticon.com/512/888/888857.png" alt="Google Play" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="fallback-icon" style="display: none;"><i class="fab fa-google-play"></i></div>
+                <div class="name">Google Play</div>
+                <div class="note">Android, Android TV</div>
+            </a>
+
+            <a href="https://www.rustore.ru/catalog/app/com.ottplay.ottplay" target="_blank" rel="noopener noreferrer" class="download-card">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/archive/e/e5/20230819232608%21RuStore_logo.svg?utm_source=ru.wikipedia.org&utm_campaign=index&utm_content=original" alt="RuStore" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="fallback-icon" style="display: none;"><i class="fas fa-store"></i></div>
+                <div class="name">RuStore</div>
+                <div class="note">Android, Android TV</div>
+            </a>
+
+            <a href="https://apps.apple.com/uz/app/tv-list-pro-iptv-player/id6444597135?l=ru" target="_blank" rel="noopener noreferrer" class="download-card">
+                <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/6/67/App_Store_%28iOS%29.svg/3840px-App_Store_%28iOS%29.svg.png?utm_source=ru.wikipedia.org&utm_campaign=index&utm_content=thumbnail" alt="App Store" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="fallback-icon" style="display: none;"><i class="fab fa-apple"></i></div>
+                <div class="name">App Store</div>
+                <div class="note">iOS (аналог TV List Pro)</div>
+            </a>
+
+            <a href="https://apkpure.com/ru/televizo-iptv-player/com.ottplay.ottplay/tv" target="_blank" rel="noopener noreferrer" class="download-card">
+                <img src="https://static.wikia.nocookie.net/logopedia/images/4/49/APKPure_icon.png/revision/latest?cb=20241018141343" alt="APKPure" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="fallback-icon" style="display: none;"><i class="fas fa-box"></i></div>
+                <div class="name">APKPure</div>
+                <div class="note">Запасной вариант (APK)</div>
+            </a>
+        </div>
+
+        <div class="warning-box" style="margin-top: 20px;">
+            <i class="fas fa-circle-info"></i>
+            <p><strong>Для iOS:</strong> Televizo доступен только на Android. На iPhone/iPad используйте <strong>TV List Pro</strong> — аналогичный плеер, который также работает с M3U-плейлистами.</p>
+        </div>
+
+        <!-- ФУТЕР -->
+        <div class="footer-actions">
+            <a href="index.html" class="btn btn-primary">
+                <i class="fas fa-tv"></i> К пакетам каналов
+            </a>
+            <a href="https://t.me/tvfromspb_bot" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+                <i class="fab fa-telegram-plane"></i> Бот поддержки
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Тема
+        function applyTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+            if (savedTheme === 'light' || (!savedTheme && prefersLight)) {
+                document.body.classList.add('light-theme');
+                document.getElementById('themeIcon').className = 'fas fa-sun';
+            }
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            const isLight = document.body.classList.contains('light-theme');
+            document.getElementById('themeIcon').className = isLight ? 'fas fa-sun' : 'fas fa-moon';
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        }
+
+        applyTheme();
+    </script>
+</body>
+  </html>

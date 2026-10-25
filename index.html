@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TVFromStudios</title>
-    <meta name="description" content="TVFromSPB — IPTV плейлисты для Санкт-Петербурга и других регионов. Подключайте ТВ через Telegram-бота.">
+    <meta name="description" content="TVFromSPB — IPTV плейлисты для Санкт-Петербурга и других регионов.">
     <style>
         /* ===== ОБЩИЕ СТИЛИ ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -20,7 +19,6 @@
             align-items: center;
             padding: 20px;
             padding-left: 100px;
-            padding-bottom: 120px;
         }
 
         .fixed-logo {
@@ -83,6 +81,7 @@
             border-radius: 16px; padding: 18px 16px;
             cursor: pointer; transition: all 0.3s ease;
             text-align: center; color: #f0eaff; text-decoration: none;
+            display: flex; flex-direction: column; justify-content: space-between;
         }
         .package-card:hover {
             border-color: #a87cff; background: #3a2360;
@@ -90,12 +89,7 @@
         }
         .package-card .pkg-name { font-weight: 700; font-size: 1.05rem; }
         .package-card .pkg-status { font-size: 0.75rem; color: #b8a0d8; margin-top: 4px; }
-        .package-card .pkg-price {
-    font-size: 1rem;
-    font-weight: 700;
-    color: #4ade80;
-    margin-top: 8px;
-        }
+        .package-card .pkg-price { font-size: 1rem; font-weight: 700; color: #4ade80; margin-top: 8px; }
 
         .channel-list {
             display: none; margin-top: 20px; background: #1f1235;
@@ -110,13 +104,7 @@
             text-align: center;
         }
 
-        /* Стили для списка каналов (спиннер загрузки) */
-        .loading-spinner {
-            text-align: center;
-            padding: 40px;
-            color: #b8a0d8;
-            font-size: 1.1rem;
-        }
+        .loading-spinner { text-align: center; padding: 40px; color: #b8a0d8; font-size: 1.1rem; }
 
         .channel-grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -124,18 +112,19 @@
             max-height: 500px; overflow-y: auto; padding-right: 10px;
         }
 
-        .channel-grid .ch {
+        .channel-item {
             font-size: 0.9rem; color: #d8c8f0;
-            padding: 4px 0; border-bottom: 1px solid #2d1a4a33;
+            padding: 8px 10px; border-bottom: 1px solid #2d1a4a33;
+            cursor: pointer; border-radius: 8px; transition: background 0.2s;
         }
-        .channel-grid .ch::before { content: "▸ "; color: #7b5a9a; }
+        .channel-item:hover { background: #3a2360; color: #fff; }
+        .channel-item::before { content: "▸ "; color: #7b5a9a; }
 
         .warning-box {
             margin-top: 16px; padding: 14px 18px; background: #2d1a4a;
             border-left: 4px solid #a87cff; border-radius: 10px;
             font-size: 0.9rem; color: #d8c8f0; text-align: left; width: 100%;
         }
-        .warning-box strong { color: #f0eaff; }
 
         .btn-connect {
             display: inline-block; background: #7b5a9a; color: #fff;
@@ -156,16 +145,6 @@
         }
         .vpn-downloads a:hover { background: #5a3a8a; }
         .vpn-qr { max-width: 200px; margin: 16px auto; border-radius: 16px; border: 2px solid #4a2d7a; display: block; }
-
-        .leaderboard-banner {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 90px;
-            background: linear-gradient(90deg, #2d1a4a, #4a2d7a, #2d1a4a);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 9999; border-top: 2px solid #a87cff;
-            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
-            font-size: 1.2rem; font-weight: 700; color: #f0eaff;
-            text-shadow: 0 0 10px rgba(150, 80, 255, 0.5); letter-spacing: 1px;
-        }
 
         .iptv-info {
             margin-top: 40px; padding: 30px; background: #1f1235;
@@ -188,19 +167,17 @@
         .footer-copy { color: #6a508a; font-size: 0.8rem; }
 
         @media (max-width: 600px) {
-            body { padding-left: 20px; padding-right: 20px; padding-bottom: 100px; }
+            body { padding-left: 20px; padding-right: 20px; }
             .fixed-logo { width: 50px; top: 10px; left: 10px; }
             .container { padding: 20px 16px; margin-top: 10px; }
             .main-menu { grid-template-columns: 1fr; }
             .package-grid { grid-template-columns: 1fr 1fr; }
-            .channel-grid { grid-template-columns: 1fr 1fr; }
+            .channel-grid { grid-template-columns: 1fr; }
             .vpn-downloads { flex-direction: column; align-items: stretch; }
             .vpn-downloads a { text-align: center; }
-            .leaderboard-banner { height: 70px; font-size: 1rem; }
         }
         @media (max-width: 400px) {
             .package-grid { grid-template-columns: 1fr; }
-            .channel-grid { grid-template-columns: 1fr; }
         }
 
         .fade-in { animation: fadeIn 0.4s ease forwards; }
@@ -212,7 +189,6 @@
     <img src="https://raw.githubusercontent.com/Driver-programist/TVFromSPB/refs/heads/main/1782120869520.png" alt="TVFromSPB" class="fixed-logo">
 
     <div class="container" id="app">
-
         <div id="mainMenu" class="main-menu">
             <div class="menu-card" onclick="showPackages()">
                 <span class="icon">📺</span>
@@ -284,12 +260,7 @@
             <div id="channelList" class="channel-list">
                 <button class="back-btn" onclick="closeChannels()">← Назад к пакетам</button>
                 <h3 id="channelTitle">Название пакета</h3>
-                
-                <!-- Контейнер для спиннера загрузки -->
-                <div id="channelLoading" class="loading-spinner" style="display: none;">
-                    ⏳ Загрузка списка каналов...
-                </div>
-
+                <div id="channelLoading" class="loading-spinner" style="display: none;">⏳ Загрузка списка каналов...</div>
                 <div id="channelGrid" class="channel-grid"></div>
                 <div id="warningBox" class="warning-box"></div>
                 <a href="https://t.me/tvfromspb_bot" target="_blank" class="btn-connect">🔗 Подключить ТВ</a>
@@ -310,12 +281,12 @@
 
         <div class="iptv-info">
             <h2>Что такое IPTV и почему это удобно?</h2>
-            <p><strong>IPTV (Internet Protocol Television)</strong> — это технология, которая позволяет смотреть телеканалы через интернет, а не через традиционную антенну или кабельное ТВ. Видеопоток передается по IP-сети, что даёт ряд преимуществ.</p>
+            <p><strong>IPTV (Internet Protocol Television)</strong> — это технология, которая позволяет смотреть телеканалы через интернет. Видеопоток передается по IP-сети, что даёт ряд преимуществ.</p>
             <ul>
                 <li><strong>Высокое качество:</strong> HD и Full HD изображение без потери качества.</li>
                 <li><strong>Удобство:</strong> Смотрите ТВ на смартфоне, планшете, компьютере или Smart TV.</li>
-                <li><strong>Гибкость:</strong> Возможность паузы, перемотки и архива передач (при поддержке провайдером).</li>
-                <li><strong>Большой выбор:</strong> Сотни каналов на любой вкус: спорт, кино, детские, музыкальные.</li>
+                <li><strong>Гибкость:</strong> Возможность паузы, перемотки и архива передач.</li>
+                <li><strong>Большой выбор:</strong> Сотни каналов на любой вкус.</li>
                 <li><strong>Экономия:</strong> Обычно дешевле традиционного кабельного ТВ.</li>
             </ul>
         </div>
@@ -329,89 +300,42 @@
             </div>
             <div class="footer-copy">© 2026 TVFromStudios · Сделано в Санкт-Петербурге</div>
         </footer>
-
     </div>
 
-
     <script>
-        // Данные для пакетов, которые не парсятся из M3U
+        // --- БАЗА ДАННЫХ ПАКЕТОВ ---
         const packagesData = {
-            'Детский': {
-                channels: [
-                    'Карусель', 'Солнце', 'Киносемья', 'О!', 'IPTVPLAY МультСказки HD',
-                    'Da Vinci', 'Мульт', 'Смайлик ТВ', 'Детский мир', 'Мама', 'Уникум',
-                    'Рыжий', 'Fresh Kids' 'Cartoon Network', 'Мультимузыка', 'Мультиландия',
-                    'Nickelodeon HD', 'Nicktoons HD', 'Пингвин Лоло', 'Детский телеканал Мультимания',
-                    'TiJi', 'Gulli', 'Cartoon Classics', 'Nick Jr', 'Малыш', 'BABY TIME',
-                    'Мамонтёнок', 'JimJam', 'СТС Kids', 'Duck TV', 'Cartoonito',
-                    'Капитан Фантастика HD', 'КиноМульт', 'В гостях у сказки', 'Ani', 'Радость Моя'
-                ],
-                warning: ''
-            },
-            'Взрослый (18+)': {
-                channels: [
-                    'НСТ', 'Viju TV1000 Romantica', 'IPTVPLAY ВЕДЬМАК', 'IPTVPLAY УЖАСТИК',
-                    'Blue Hustler', 'Brazzers TV Europe', 'Brazzers TV Europe HD',
-                    'Adult IPTV Big Ass', 'Adult IPTV Russian', 'Hustler TV HD',
-                    'AIVA', 'Porn Classic', 'Private', 'Trash HD', 'CentoXCento'
-                ],
-                warning: 'Пакет телеканалов может содержать порнографический и сексуальный контент, а также хоррор-фильмы и романтические сериалы. Не рекомендуется зрителям младше 18 лет или несовершеннолетним со слабой психикой!'
-            },
-            'Настрой кино': {
-                channels: [
-                    'Киносерия HD', 'Кинокомедия', 'Киносемья HD', 'Наше новое кино',
-                    'Кинохит', 'Кинопремьера HD', 'Киноужас', 'Киносвидание',
-                    'Индийское кино', 'Киномикс', 'Мужское кино', 'Родное кино'
-                ],
-                warning: ''
-            },
-            'Кинозалы': {
-                channels: [
-                    'IPTVPLAY PROMO', 'IPTVPLAY TEST', 'IPTVPLAY МультСказки HD',
-                    'IPTVPLAY ВЕДЬМАК', 'IPTVPLAY ДЕСЯТОЕ КОРОЛЕВСТВО', 'IPTVPLAY ИНТЕРНЫ',
-                    'IPTVPLAY ФАНТАСТИКА', 'IPTVPLAY ПАМЯТЬ', 'IPTVPLAY УЖАСТИК',
-                    'IPTVPLAY Великая Отечественная HD'
-                ],
-                warning: 'Данные телеканалы могут содержать фильмы, сериалы, документальное кино с ненормативной лексикой или от режиссёров и сценаристов, признанными ИНОСТРАННЫМИ АГЕНТАМИ В РФ!<br><strong>Вещание в Full HD (1080p)</strong>'
-            }
+            'Детский': { channels: ['Карусель', 'Солнце', 'Киносемья', 'О!', 'Da Vinci', 'Мульт', 'Смайлик ТВ', 'Детский мир', 'Мама', 'Уникум', 'Рыжий', 'Cartoon Network', 'Nickelodeon', 'Nicktoons', 'TiJi', 'СТС Kids', 'Duck TV'], warning: '' },
+            'Взрослый (18+)': { channels: ['НСТ', 'Viju TV1000 Romantica', 'Blue Hustler', 'Brazzers TV', 'Hustler TV HD', 'AIVA', 'Private', 'Trash HD'], warning: 'Пакет содержит контент 18+.' },
+            'Настрой кино': { channels: ['Киносерия HD', 'Кинокомедия', 'Киносемья HD', 'Наше новое кино', 'Кинохит', 'Кинопремьера HD', 'Киноужас', 'Киносвидание', 'Индийское кино', 'Киномикс'], warning: '' },
+            'Кинозалы': { channels: ['IPTVPLAY PROMO', 'IPTVPLAY TEST', 'IPTVPLAY МультСказки HD', 'IPTVPLAY ВЕДЬМАК'], warning: 'Вещание в Full HD (1080p)' }
         };
 
-        // Список радиостанций
-        const radioStations = [
-            'Вести FM', 'Маяк', 'Радио России', 'Питер FM (Санкт-Петербург)',
-            'Record Dance Radio (Санкт-Петербург)', 'Europa Plus', 'Дорожное радио', 'Детское радио 103.7 FM'
-        ];
+        const radioStations = ['Вести FM', 'Маяк', 'Радио России', 'Питер FM', 'Record Dance Radio', 'Europa Plus', 'Дорожное радио', 'Детское радио'];
 
-        // Ссылки на M3U плейлисты для городов
+        // Ссылки на плейлисты (Используем jsDelivr для обхода CORS)
         const m3uUrls = {
-    'region-spb': 'https://corsproxy.io/?url=' + encodeURIComponent('https://raw.githubusercontent.com/Driver-programist2/tvfromstudios/refs/heads/main/spb.m3u'),
-    'region-msk': 'https://corsproxy.io/?url=' + encodeURIComponent('https://raw.githubusercontent.com/Driver-programist2/tvfromstudios/refs/heads/main/msk.m3u')
-};
+            'region-spb': 'https://cdn.jsdelivr.net/gh/Driver-programist2/tvfromstudios@main/spb.m3u',
+            'region-msk': 'https://cdn.jsdelivr.net/gh/Driver-programist2/tvfromstudios@main/msk.m3u'
+        };
 
         // Функция парсинга M3U
         function parseM3U(m3uContent) {
             const lines = m3uContent.split('\n');
-            const groups = {}; // Объект для группировки по group-title
+            const groups = {};
             let currentGroup = 'Без категории';
 
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (line.startsWith('#EXTINF:')) {
-                    // Ищем group-title
                     const groupMatch = line.match(/group-title="([^"]+)"/);
-                    if (groupMatch) {
-                        currentGroup = groupMatch[1];
-                    } else {
-                        currentGroup = 'Без категории';
-                    }
+                    if (groupMatch) currentGroup = groupMatch[1];
+                    else currentGroup = 'Без категории';
 
-                    // Извлекаем название канала (всё, что после последней запятой)
                     const parts = line.split(',');
                     if (parts.length > 1) {
                         const channelName = parts[parts.length - 1].trim();
-                        if (!groups[currentGroup]) {
-                            groups[currentGroup] = [];
-                        }
+                        if (!groups[currentGroup]) groups[currentGroup] = [];
                         groups[currentGroup].push(channelName);
                     }
                 }
@@ -419,7 +343,7 @@
             return groups;
         }
 
-        // Показ пакетов
+        // Навигация
         function showPackages() {
             document.getElementById('mainMenu').style.display = 'none';
             document.getElementById('vpnSection').classList.remove('active');
@@ -443,28 +367,33 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Отрисовка списка каналов
+        // Отрисовка каналов
         function renderChannels(channels, warning) {
             const grid = document.getElementById('channelGrid');
             grid.innerHTML = '';
             
             channels.forEach(ch => {
                 const div = document.createElement('div');
-                div.className = 'ch';
                 
-                // Стилизация заголовков групп
                 if (ch.startsWith('===')) {
+                    div.className = 'channel-item group-header';
                     div.style.fontWeight = 'bold';
                     div.style.color = '#a87cff';
                     div.style.marginTop = '10px';
                     div.style.borderBottom = '2px solid #4a2d7a';
-                    div.style.gridColumn = '1 / -1';
+                    div.style.cursor = 'default';
                     div.textContent = ch.replace(/===/g, '').trim();
                 } else {
+                    div.className = 'channel-item';
                     div.textContent = ch;
-                    if (ch.startsWith('📻')) {
-                        div.style.color = '#ffcc00';
-                    }
+                    
+                    // ЛОГИКА КЛИКА ПО КАНАЛУ
+                    div.onclick = function() {
+                        // Переходим на страницу channel.html с параметром name в URL
+                        window.location.href = 'channel.html?name=' + encodeURIComponent(ch);
+                    };
+
+                    if (ch.startsWith('📻')) div.style.color = '#ffcc00';
                 }
                 grid.appendChild(div);
             });
@@ -478,13 +407,12 @@
             }
         }
 
-        // Показ каналов (с логикой подгрузки)
+        // Показ каналов
         async function showChannels(packageName, type) {
             document.getElementById('packageGrid').style.display = 'none';
             const channelList = document.getElementById('channelList');
             channelList.classList.add('active');
-            channelList.classList.add('fade-in');
-
+            
             document.getElementById('channelTitle').textContent = '📺 ' + packageName;
             
             const loadingDiv = document.getElementById('channelLoading');
@@ -494,7 +422,6 @@
             let channels = [];
             let warning = '';
 
-            // Если это регион с M3U-файлом
             if (type === 'region-spb' || type === 'region-msk') {
                 loadingDiv.style.display = 'block';
                 gridDiv.innerHTML = '';
@@ -508,17 +435,15 @@
                     const text = await response.text();
                     const parsedGroups = parseM3U(text);
 
-                    // Формируем плоский список каналов с группировкой
                     for (const [group, chans] of Object.entries(parsedGroups)) {
                         channels.push(`=== ${group} ===`);
                         chans.forEach(ch => channels.push(ch));
                     }
                     
-                    // Добавляем радио в конец
                     channels.push(`=== РАДИО ===`);
                     radioStations.forEach(station => channels.push('📻 ' + station));
 
-                    warning = '📌 Показаны все каналы и радиостанции из плейлиста. Для подключения нажмите "Подключить ТВ".';
+                    warning = '📌 Нажмите на любой канал, чтобы узнать подробности.';
                 } catch (error) {
                     console.error(error);
                     channels = ['Ошибка загрузки плейлиста. Проверьте ссылку.'];
@@ -527,11 +452,9 @@
                     loadingDiv.style.display = 'none';
                 }
             } else if (type === 'region') {
-                // Для других регионов (заглушка)
-                channels = ['Общероссийские', 'Региональные', 'Фильмы и сериалы', 'Развлекательные', 'Познавательные', 'Детские', 'Музыкальные', 'Спортивные', 'Кинозалы'];
-                warning = '📌 Нажмите "Подключить ТВ" ниже.';
+                channels = ['Общероссийские', 'Региональные', 'Фильмы и сериалы'];
+                warning = '📌 Полный список доступен в Telegram-боте.';
             } else {
-                // Для статических пакетов
                 const data = packagesData[packageName];
                 if (data) {
                     channels = data.channels;

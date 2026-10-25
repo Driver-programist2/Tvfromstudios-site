@@ -90,6 +90,12 @@
         }
         .package-card .pkg-name { font-weight: 700; font-size: 1.05rem; }
         .package-card .pkg-status { font-size: 0.75rem; color: #b8a0d8; margin-top: 4px; }
+        .package-card .pkg-price {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #4ade80;
+    margin-top: 8px;
+        }
 
         .channel-list {
             display: none; margin-top: 20px; background: #1f1235;
@@ -225,11 +231,13 @@
             <div class="package-grid" id="packageGrid">
                 <div class="package-card" onclick="showChannels('Основной Санкт-Петербург', 'region-spb')">
                     <div class="pkg-name">Основной Санкт-Петербург</div>
-                    <div class="pkg-status">300+ каналов и Радио</div>
+                    <div class="pkg-status">450+ каналов и Радио</div>
+                    <div class="pkg-price">Бесплатно</div>
                 </div>
                 <div class="package-card" onclick="showChannels('Основной Москва', 'region-msk')">
                     <div class="pkg-name">Основной Москва</div>
-                    <div class="pkg-status">300+ каналов и Радио</div>
+                    <div class="pkg-status">450+ каналов и Радио</div>
+                    <div class="pkg-price">Бесплатно</div>
                 </div>
                 <div class="package-card" onclick="showChannels('Основной Нижний Новгород', 'region')">
                     <div class="pkg-name">Основной Нижний Новгород</div>
@@ -254,18 +262,22 @@
                 <div class="package-card" onclick="showChannels('Детский', 'kids')">
                     <div class="pkg-name">Детский</div>
                     <div class="pkg-status">35+ каналов</div>
+                    <div class="pkg-price">Бесплатно</div>
                 </div>
                 <div class="package-card" onclick="showChannels('Взрослый (18+)', 'adult')">
                     <div class="pkg-name">Взрослый (18+)</div>
                     <div class="pkg-status">14 каналов</div>
+                    <div class="pkg-price">Бесплатно</div>
                 </div>
                 <div class="package-card" onclick="showChannels('Настрой кино', 'kino')">
                     <div class="pkg-name">Настрой кино</div>
                     <div class="pkg-status">11 каналов</div>
+                    <div class="pkg-price">Бесплатно</div>
                 </div>
                 <div class="package-card" onclick="showChannels('Кинозалы', 'cinema')">
                     <div class="pkg-name">Кинозалы</div>
                     <div class="pkg-status">10 каналов</div>
+                    <div class="pkg-price">Бесплатно</div>
                 </div>
             </div>
 
@@ -291,7 +303,7 @@
             <p><strong>Для подключения нужно установить Happ</strong></p>
             <div class="vpn-downloads">
                 <a href="https://play.google.com/store/apps/details?id=com.happproxy" target="_blank">📱 Android</a>
-                <a href="https://github.com/Happ-proxy/happ-desktop/releases/download/2.18.3/setup-Happ.x64.exe" target="_blank">💻 Windows</a>
+                <a href="https://github.com/Happ-proxy/happ-desktop/releases/download/" target="_blank">💻 Windows</a>
             </div>
             <img src="https://raw.githubusercontent.com/Driver-programist/TVFromSPB/refs/heads/main/SillyVPN.png" alt="QR-код для Happ" class="vpn-qr">
         </div>
@@ -310,19 +322,16 @@
 
         <footer class="footer">
             <div class="social-links">
-                <a href="https://t.me/tvfromspb" target="_blank">📱 Telegram-канал</a>
-                <a href="https://vk.ru/club235720127" target="_blank">📖 Группа VK</a>
-                <a href="https://youtube.com/@tvfromstudios" target="_blank">🎥 YouTube-канал</a>
-                <a href="https://github.com/Driver-programist" target="_blank">💻 Страница разработчика</a>
+                <a href="https://t.me/tvfromstudios" target="_blank">📱 Telegram-канал</a>
+                <a href="https://vk.ru/tvfromstudios" target="_blank">📖 Группа VK</a>
+                <a href="https://youtube.com" target="_blank">🎥 YouTube-канал</a>
+                <a href="https://github.com/Driver-programist2" target="_blank">💻 Страница разработчика</a>
             </div>
             <div class="footer-copy">© 2026 TVFromStudios · Сделано в Санкт-Петербурге</div>
         </footer>
 
     </div>
 
-    <div class="leaderboard-banner">
-        🎯 Реклама: TVFromStudios — лучшие IPTV-плейлисты!
-    </div>
 
     <script>
         // Данные для пакетов, которые не парсятся из M3U
@@ -331,8 +340,8 @@
                 channels: [
                     'Карусель', 'Солнце', 'Киносемья', 'О!', 'IPTVPLAY МультСказки HD',
                     'Da Vinci', 'Мульт', 'Смайлик ТВ', 'Детский мир', 'Мама', 'Уникум',
-                    'Рыжий', 'Cartoon Network', 'Мультимузыка', 'Мультиландия',
-                    'Nickelodeon', 'Nicktoons', 'Пингвин Лоло', 'Детский телеканал Мультимания',
+                    'Рыжий', 'Fresh Kids' 'Cartoon Network', 'Мультимузыка', 'Мультиландия',
+                    'Nickelodeon HD', 'Nicktoons HD', 'Пингвин Лоло', 'Детский телеканал Мультимания',
                     'TiJi', 'Gulli', 'Cartoon Classics', 'Nick Jr', 'Малыш', 'BABY TIME',
                     'Мамонтёнок', 'JimJam', 'СТС Kids', 'Duck TV', 'Cartoonito',
                     'Капитан Фантастика HD', 'КиноМульт', 'В гостях у сказки', 'Ani', 'Радость Моя'
@@ -350,7 +359,7 @@
             },
             'Настрой кино': {
                 channels: [
-                    'Киносерия HD', 'Кинокомедия', 'Киносемья', 'Наше новое кино',
+                    'Киносерия HD', 'Кинокомедия', 'Киносемья HD', 'Наше новое кино',
                     'Кинохит', 'Кинопремьера HD', 'Киноужас', 'Киносвидание',
                     'Индийское кино', 'Киномикс', 'Мужское кино', 'Родное кино'
                 ],
@@ -375,9 +384,9 @@
 
         // Ссылки на M3U плейлисты для городов
         const m3uUrls = {
-            'region-spb': 'https://github.com/Driver-programist2/tvfromstudios/raw/refs/heads/main/spb.m3u',
-            'region-msk': 'https://github.com/Driver-programist2/tvfromstudios/raw/refs/heads/main/msk.m3u'
-        };
+    'region-spb': 'https://corsproxy.io/?url=' + encodeURIComponent('https://raw.githubusercontent.com/Driver-programist2/tvfromstudios/refs/heads/main/spb.m3u'),
+    'region-msk': 'https://corsproxy.io/?url=' + encodeURIComponent('https://raw.githubusercontent.com/Driver-programist2/tvfromstudios/refs/heads/main/msk.m3u')
+};
 
         // Функция парсинга M3U
         function parseM3U(m3uContent) {
@@ -520,7 +529,7 @@
             } else if (type === 'region') {
                 // Для других регионов (заглушка)
                 channels = ['Общероссийские', 'Региональные', 'Фильмы и сериалы', 'Развлекательные', 'Познавательные', 'Детские', 'Музыкальные', 'Спортивные', 'Кинозалы'];
-                warning = '📌 Полный список каналов доступен в Telegram-боте. Нажмите "Подключить ТВ" ниже.';
+                warning = '📌 Нажмите "Подключить ТВ" ниже.';
             } else {
                 // Для статических пакетов
                 const data = packagesData[packageName];
